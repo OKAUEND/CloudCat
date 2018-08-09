@@ -20,4 +20,9 @@ public class CameraController : MonoBehaviour {
             transform.position = new Vector3(transform.position.x, playerPos.y, transform.position.z);
         }
 	}
+
+    public void SetInit()
+    {
+        transform.position = new Vector3(0, 0, -10);
+    }
 }

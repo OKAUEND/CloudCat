@@ -10,10 +10,18 @@ public class PlayerController : MonoBehaviour {
     float WalkForce = 30.0f;
     float maxWalkSpeed = 2.0f;
 
+    private string OutOfScreen = "Out of Screen";
+
+    private Vector3 StartPosition;
+    private Vector3 ReStaryPosition;
+
+
 	// Use this for initialization
 	void Start () {
         this.rigid2d = GetComponent<Rigidbody2D>();
         this.animation = GetComponent<Animator>();
+        this.StartPosition = GameObject.Find("StartPosition").transform.position;
+        this.ReStaryPosition = GameObject.Find("RestartPosition1").transform.position;
 	}
 	
 	// Update is called once per frame
@@ -21,6 +29,7 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             this.rigid2d.AddForce(transform.up * this.jumpForce);
+
         }
 
         //左右移動
@@ -44,13 +53,37 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if()
+        if(IsOutofScreen(collision.tag))
+        {
+            setPlayerPosition();
+        }
 
         Debug.Log("ゴール!!");
     }
 
     private bool IsOutofScreen(string tag)
     {
-        return true;
+        return tag == OutOfScreen;
+    }
+
+    private void setPlayerPosition()
+    {
+        float PlayerPositionY = transform.position.y;
+        Vector3 RePlayerPosition;
+        
+        if(PlayerPositionY > ReStaryPosition.y -0.2)
+        {
+            RePlayerPosition = ReStaryPosition;
+        }
+        else
+        {
+            RePlayerPosition = StartPosition;
+            GameObject.Find("Main Camera").GetComponent<CameraController>().SetInit();
+
+        }
+
+        transform.position = new Vector3(RePlayerPosition.x, RePlayerPosition.y, RePlayerPosition.z);
+
+
     }
 }
